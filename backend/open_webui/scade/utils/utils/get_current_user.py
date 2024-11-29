@@ -9,6 +9,22 @@ from open_webui.scade.utils.utils.decode import decode_token
 bearer_security = HTTPBearer(auto_error=False)
 
 
+def get_or_create_current_user(data):
+    user = Users.get_user_by_id(data["id"])
+    if user is None:
+        # TODO: refactor it
+        user = Users.insert_new_user(
+            id=data["id"],
+            name="user",
+            email=f"{data['id']}@scade.pro",
+            role="user",
+        )
+        Users.update_user_last_active_by_id(user.id)
+    else:
+        Users.update_user_last_active_by_id(user.id)
+    return user
+
+
 def get_current_user(
     request: Request,
     auth_token: HTTPAuthorizationCredentials = Depends(bearer_security),
@@ -44,19 +60,7 @@ def get_current_user(
         )
 
     if data is not None and "id" in data:
-        user = Users.get_user_by_id(data["id"])
-        if user is None:
-            # TODO: refactor it
-            user = Users.insert_new_user(
-                id=data["id"],
-                name="user",
-                email=f"{data['id']}@scade.pro",
-                role="user",
-            )
-            Users.update_user_last_active_by_id(user.id)
-        else:
-            Users.update_user_last_active_by_id(user.id)
-        return user
+        return get_or_create_current_user(data)
     else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

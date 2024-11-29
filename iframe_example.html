@@ -5,18 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authentication Before Iframe</title>
     <script>
-        // Function to simulate authentication
+        // Function to simulate authentication with JWT token
         function authenticateAndLoadIframe() {
-            const username = prompt("Enter username:");
-            const password = prompt("Enter password:");
+            const jwt_token = prompt("Enter your JWT token:");
 
-            // Simulating a simple check (You can replace this with a real authentication check)
-            if (username === "user" && password === "password") {
-                // If authentication is successful, show iframe
-                document.getElementById("iframe-container").style.display = "block";
-                document.getElementById("auth-message").style.display = "none";
+            if (jwt_token) {
+                // Send the JWT token to the server for verification
+                fetch('/auth/frame-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ jwt_token: jwt_token })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "Login successful") {
+                        // If authentication is successful, show iframe
+                        document.getElementById("iframe-container").style.display = "block";
+                        document.getElementById("auth-message").style.display = "none";
+                    } else {
+                        alert("Authentication failed. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    alert("An error occurred. Please try again.");
+                });
             } else {
-                alert("Invalid credentials. Please try again.");
+                alert("JWT token is required.");
             }
         }
 
@@ -28,7 +44,7 @@
     <h1>Iframe Authentication Example</h1>
 
     <div id="auth-message">
-        <p>Please authenticate to view the content:</p>
+        <p>Please enter your JWT token to view the content:</p>
     </div>
 
     <div id="iframe-container" style="display:none;">
