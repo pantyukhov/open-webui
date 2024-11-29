@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Before Iframe</title>
+    <script>
+        // Function to simulate authentication
+        function authenticateAndLoadIframe() {
+            const username = prompt("Enter username:");
+            const password = prompt("Enter password:");
+
+            // Simulating a simple check (You can replace this with a real authentication check)
+            if (username === "user" && password === "password") {
+                // If authentication is successful, show iframe
+                document.getElementById("iframe-container").style.display = "block";
+                document.getElementById("auth-message").style.display = "none";
+            } else {
+                alert("Invalid credentials. Please try again.");
+            }
+        }
+
+        // Call the function when the page loads
+        window.onload = authenticateAndLoadIframe;
+    </script>
+</head>
+<body>
+    <h1>Iframe Authentication Example</h1>
+
+    <div id="auth-message">
+        <p>Please authenticate to view the content:</p>
+    </div>
+
+    <div id="iframe-container" style="display:none;">
+        <iframe src="http://localhost:8000" width="100%" height="600px"></iframe>
+    </div>
+</body>
+</html>

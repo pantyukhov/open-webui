@@ -2678,6 +2678,11 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/cache", StaticFiles(directory=CACHE_DIR), name="cache")
 
 
+from open_webui.scade.main import init_scade_urls
+
+init_scade_urls(app)
+
+
 if os.path.exists(FRONTEND_BUILD_DIR):
     mimetypes.add_type("text/javascript", ".js")
     app.mount(
