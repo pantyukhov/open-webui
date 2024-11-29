@@ -123,9 +123,6 @@ def get_current_user(
         )
 
 
-from open_webui.scade.utils.utils.get_current_user import *
-
-
 def get_current_user_by_api_key(api_key: str):
     user = Users.get_user_by_api_key(api_key)
 
